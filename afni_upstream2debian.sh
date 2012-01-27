@@ -158,9 +158,15 @@ if [ -n "${gitdir}" ]; then
 	if [ ! -f ${upstream_archive} -a ! -f ${curdir}/tarballs/$(basename ${upstream_archive}) ]; then
 		echo "Storing upstream tarball as ${upstream_archive}"
 		cp -a ${tarball_path} ${upstream_archive}
+		# g-i-o fails to deduce upstream name, so let's symlink to .orig.tar.gz
+		f=$(basename $upstream_archive)
+		tf=/tmp/${f/-/_}
+		tf=${tf/.tgz/.orig.tar.gz}
+		ln -fs $f $tf
 		echo "Importing upstream tarball into GIT with pristine-tar"
 		( cd $HOME/git/afni-pristine && \
-		  git-import-orig --pristine-tar "${upstream_archive}" -u "${afni_version}"; )
+		  git-import-orig --pristine-tar "${tf}" -u "${afni_version}"; )
+		rm -f $tf
 	fi
 else
 	echo "Append version to source directory names"
