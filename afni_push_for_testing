@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# A helper script which would merge/push afni source for test build on travis
+
+cd /home/neurodebian/git/afni-testing
+git checkout testing
+git fetch origin
+git merge origin/master
+git push gh-yarikoptic testing
+echo "Pushed for testing"
