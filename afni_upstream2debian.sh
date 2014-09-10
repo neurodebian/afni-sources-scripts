@@ -58,8 +58,8 @@ wdir=$(mktemp -d)
 # if '-' as tarball, download the latest snapshot
 if [ "$tarball" = "-" ]; then
 	echo "Downloading latest AFNI snapshot"
-	wget -q http://afni.nimh.nih.gov/pub/dist/tgz/AFNI_latest.tgz
-	tarball="AFNI_latest.tgz"
+	wget -q http://afni.nimh.nih.gov/pub/dist/tgz/afni_src.tgz
+	tarball="afni_src.tgz"
 fi
 
 # put upstream source tarball into working dir
@@ -118,9 +118,19 @@ rm -f ${spath}/f2c.h
 # gifsicle
 rm -rf ${spath}/gifsicle*
 
+# XmHTML
+rm -rf ${spath}/XmHTML
+
+# NiBabel
+rm -rf ${spath}/pkundu/meica.libs/nibabel
+
+# MDP
+rm -rf ${spath}/pkundu/meica.libs/mdp
+
 echo "Remove problematic code"
 # non-commercial license (README also says non-distribution)
-rm -rf ${spath}/3DEdge
+# Now GPL!!
+#rm -rf ${spath}/3DEdge
 
 # non-commercial, non-distribution license
 rm -rf ${spath}/svm
@@ -162,10 +172,10 @@ if [ -n "${gitdir}" ]; then
 		f=$(basename $upstream_archive)
 		tf=/tmp/${f/-/_}
 		tf=${tf/.tgz/.orig.tar.gz}
-		ln -fs $f $tf
+		ln -fs $upstream_archive $tf
 		echo "Importing upstream tarball into GIT with pristine-tar"
 		( cd $HOME/git/afni-pristine && \
-		  echo -e "\n" |  PS1= git-import-orig --pristine-tar "${tf}" -u "0.${afni_version}"; )
+		  echo -e "\n" |  PS1= git-import-orig --no-merge --pristine-tar "${tf}" -u "0.${afni_version}"; )
 		rm -f $tf
 	fi
 else
