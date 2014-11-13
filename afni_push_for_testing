@@ -5,6 +5,8 @@
 cd /home/neurodebian/git/afni-testing
 git checkout testing
 git fetch origin
-git merge origin/master
+git fetch gh-yarikoptic
+git merge -m "automated merge of custom testing changes" gh-yarikoptic/testing
+git merge -m "automated merge of fresh upstream" origin/master
 git push gh-yarikoptic testing
 echo "Pushed for testing"
